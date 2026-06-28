@@ -22,6 +22,8 @@ import {
 import Image from "next/image";
 
 import { Suspense } from "react";
+import { motion } from "framer-motion";
+const MotionLink = motion(Link);
 
 function NavbarContent() {
   const { user, role, cartCount, wishlistCount, logout, isPageLoading, theme, toggleTheme } = useApp();
@@ -123,18 +125,24 @@ function NavbarContent() {
             </Link>
 
             {/* AI Find */}
-            <Link
+            <MotionLink
               href="/find-my-fit"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 450, damping: 18 }}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary-dark rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200"
               title="Find matching clothes using AI"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">AI Find</span>
-            </Link>
+            </MotionLink>
 
             {/* Wishlist */}
-            <Link
+            <MotionLink
               href="/wishlist"
+              whileHover={{ scale: 1.15, y: -2 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className="p-2 text-text-primary hover:text-primary-dark transition-colors relative"
               title="Wishlist"
             >
@@ -144,11 +152,14 @@ function NavbarContent() {
                   {wishlistCount}
                 </span>
               )}
-            </Link>
+            </MotionLink>
 
             {/* Cart Bag */}
-            <Link
+            <MotionLink
               href="/cart"
+              whileHover={{ scale: 1.15, y: -2 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className="p-2 text-text-primary hover:text-primary-dark transition-colors relative"
               title="Shopping Cart"
             >
@@ -158,16 +169,19 @@ function NavbarContent() {
                   {cartCount}
                 </span>
               )}
-            </Link>
+            </MotionLink>
  
             {/* Theme Toggle Switch */}
-            <button
+            <motion.button
               onClick={toggleTheme}
-              className="p-2 text-text-primary hover:text-primary-dark transition-all duration-300 hover:rotate-12 hover:scale-110"
+              whileHover={{ scale: 1.15, rotate: 15 }}
+              whileTap={{ scale: 0.85 }}
+              transition={{ type: "spring", stiffness: 400, damping: 12 }}
+              className="p-2 text-text-primary hover:text-primary-dark transition-all duration-300"
               title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
             >
               {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5 text-yellow-400 fill-yellow-400" />}
-            </button>
+            </motion.button>
 
             {/* Profile / Dropdown */}
             {user ? (

@@ -8,6 +8,7 @@ import { Product } from "@/types";
 import { useApp } from "@/components/AppContext";
 import { formatINR, calculateDiscount } from "@/lib/utils";
 import { toast } from "sonner";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 interface ProductCardProps {
   product: Product;
@@ -23,6 +24,31 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const isWishlisted = wishlist.some((item) => item.product_id === product.id);
   const hasDiscount = product.original_price && product.original_price > product.price;
   const discount = hasDiscount ? calculateDiscount(product.price, product.original_price) : 0;
+
+  // iOS-style 3D Tilt variables
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), { damping: 25, stiffness: 200 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), { damping: 25, stiffness: 200 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left - width / 2;
+    const mouseY = e.clientY - rect.top - height / 2;
+
+    x.set(mouseX / width);
+    y.set(mouseY / height);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    setHovered(false);
+    setShowQuickSizes(false);
+  };
 
   // Decide image aspect ratio based on index for natural Pinterest masonry feel
   const aspectClass = index % 3 === 0 ? "aspect-[3/4]" : index % 3 === 1 ? "aspect-[2/3]" : "aspect-[4/5]";
@@ -40,13 +66,14 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   };
 
   return (
-    <div
-      className="group relative flex flex-col glass-container rounded-card shadow-soft overflow-hidden hover:translate-y-[-4px] transition-all duration-300 animate-fade-in font-body"
+    <motion.div
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      onMouseMove={handleMouseMove}
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => {
-        setHovered(false);
-        setShowQuickSizes(false);
-      }}
+      onMouseLeave={handleMouseLeave}
+      whileHover={{ scale: 1.02, y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      className="group relative flex flex-col glass-container rounded-card shadow-soft overflow-hidden transition-all duration-300 animate-fade-in font-body cursor-pointer"
     >
       {/* Image Container */}
       <div className={`relative w-full ${aspectClass} overflow-hidden bg-secondary/10`}>
@@ -179,6 +206,6 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -25,6 +25,31 @@ import { MOCK_PRODUCTS } from "@/lib/mock-data";
 import { formatINR } from "@/lib/utils";
 import { useApp } from "@/components/AppContext";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+} as const;
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 100,
+      damping: 15,
+    },
+  },
+} as const;
 
 interface HomeClientProps {
   initialProducts: Product[];
@@ -115,30 +140,43 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
       <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-background via-secondary/15 to-accent/15 overflow-hidden py-16 lg:py-24 font-body">
         
         {/* Subtle Decorative Gradient Blobs */}
-        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-primary/10 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-accent/20 blur-[150px] pointer-events-none" />
+        <motion.div 
+          animate={{ x: [0, 30, 0], y: [0, -30, 0] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-primary/10 blur-[120px] pointer-events-none" 
+        />
+        <motion.div 
+          animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-accent/20 blur-[150px] pointer-events-none" 
+        />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
             {/* Left Intro Text Column */}
-            <div className="lg:col-span-6 flex flex-col items-start text-left space-y-6 lg:space-y-8">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="lg:col-span-6 flex flex-col items-start text-left space-y-6 lg:space-y-8"
+            >
               
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/15 border border-primary/20 text-xs font-bold uppercase tracking-wider text-primary-dark shadow-sm">
+              <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/15 border border-primary/20 text-xs font-bold uppercase tracking-wider text-primary-dark shadow-sm">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>AI-Powered Styling Marketplace</span>
-              </div>
+              </motion.div>
 
-              <h1 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text-primary leading-[1.08]">
+              <motion.h1 variants={itemVariants} className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text-primary leading-[1.08]">
                 Wear What <br />
                 <span className="italic text-primary-dark font-normal">You Pin</span>
-              </h1>
+              </motion.h1>
 
-              <p className="text-text-secondary text-base sm:text-lg max-w-lg leading-relaxed">
+              <motion.p variants={itemVariants} className="text-text-secondary text-base sm:text-lg max-w-lg leading-relaxed">
                 Found the perfect outfit on Pinterest? Upload it here. Our AI instantly matches it to catalog pieces and lets you try them on an AI Avatar.
-              </p>
+              </motion.p>
 
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <Link
                   href="/find-my-fit"
                   className="flex items-center justify-center gap-2 px-8 py-4 bg-primary hover:bg-primary-dark text-text-primary hover:text-white rounded-btn text-xs font-bold uppercase tracking-widest shadow-soft transition-all duration-300 hover:scale-105 active:scale-95 group"
@@ -154,10 +192,10 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
                   <span>Explore Catalog</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-              </div>
+              </motion.div>
 
               {/* Trust Badge Indicators */}
-              <div className="pt-4 flex items-center gap-6 border-t border-border w-full max-w-md">
+              <motion.div variants={itemVariants} className="pt-4 flex items-center gap-6 border-t border-border w-full max-w-md">
                 <div>
                   <h4 className="text-xl font-heading font-bold text-text-primary">10k+</h4>
                   <p className="text-[10px] uppercase font-bold tracking-wider text-text-secondary">Happy Customers</p>
@@ -172,9 +210,9 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
                   <h4 className="text-xl font-heading font-bold text-text-primary">Free</h4>
                   <p className="text-[10px] uppercase font-bold tracking-wider text-text-secondary">Shipping India-wide</p>
                 </div>
-              </div>
+              </motion.div>
 
-            </div>
+            </motion.div>
 
             {/* Right Pinterest-Core Polaroid Collage Column */}
             <div className="lg:col-span-6 relative w-full h-[580px] sm:h-[650px] flex items-center justify-center pointer-events-none lg:pointer-events-auto">
@@ -182,7 +220,11 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
               {/* Floating aesthetic collage grid */}
               
               {/* Polaroid 1 (Top Left) */}
-              <div className="absolute top-[8%] left-[2%] w-[150px] sm:w-[190px] bg-surface p-2 pb-6 sm:p-3 sm:pb-8 rounded-lg shadow-soft rotate-[-6deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border pointer-events-auto">
+              <motion.div 
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-[8%] left-[2%] w-[150px] sm:w-[190px] bg-surface p-2 pb-6 sm:p-3 sm:pb-8 rounded-lg shadow-soft rotate-[-6deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border pointer-events-auto"
+              >
                 <div className="relative w-full aspect-[4/5] bg-secondary/15 rounded-md overflow-hidden mb-2">
                   <Image 
                     src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&auto=format&fit=crop&q=80"
@@ -194,10 +236,14 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
                   <div className="absolute top-[-8px] left-[35%] w-[40px] h-[16px] bg-secondary/60 backdrop-blur-sm shadow-sm rotate-[12deg]" />
                 </div>
                 <span className="font-heading italic text-xs text-text-secondary block text-center">Blush Satin</span>
-              </div>
+              </motion.div>
 
               {/* Polaroid 2 (Top Right) */}
-              <div className="absolute top-[3%] right-[8%] w-[160px] sm:w-[210px] bg-surface p-2 pb-6 sm:p-3 sm:pb-8 rounded-lg shadow-soft rotate-[4deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border pointer-events-auto">
+              <motion.div 
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute top-[3%] right-[8%] w-[160px] sm:w-[210px] bg-surface p-2 pb-6 sm:p-3 sm:pb-8 rounded-lg shadow-soft rotate-[4deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border pointer-events-auto"
+              >
                 <div className="relative w-full aspect-[3/4] bg-secondary/15 rounded-md overflow-hidden mb-2">
                   <Image 
                     src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&auto=format&fit=crop&q=80"
@@ -209,10 +255,14 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
                   <div className="absolute top-[-8px] left-[38%] w-[45px] h-[18px] bg-accent/50 backdrop-blur-sm shadow-sm rotate-[-8deg]" />
                 </div>
                 <span className="font-heading italic text-xs text-text-secondary block text-center">Linen Drape</span>
-              </div>
+              </motion.div>
 
               {/* Polaroid 3 (Center) */}
-              <div className="absolute top-[28%] left-[25%] sm:left-[28%] w-[180px] sm:w-[240px] bg-surface p-2.5 pb-7 sm:p-3.5 sm:pb-10 rounded-lg shadow-soft rotate-[-2deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border z-20 pointer-events-auto">
+              <motion.div 
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute top-[28%] left-[25%] sm:left-[28%] w-[180px] sm:w-[240px] bg-surface p-2.5 pb-7 sm:p-3.5 sm:pb-10 rounded-lg shadow-soft rotate-[-2deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border z-20 pointer-events-auto"
+              >
                 <div className="relative w-full aspect-[4/5] bg-secondary/15 rounded-md overflow-hidden mb-2">
                   <Image 
                     src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&auto=format&fit=crop&q=80"
@@ -227,10 +277,14 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
                   <div className="absolute top-[-10px] left-[35%] w-[55px] h-[20px] bg-primary/40 backdrop-blur-sm shadow-sm rotate-[4deg]" />
                 </div>
                 <span className="font-heading italic text-sm text-text-primary block text-center font-bold">Kushvi Rose</span>
-              </div>
+              </motion.div>
 
               {/* Polaroid 4 (Bottom Left) */}
-              <div className="absolute bottom-[4%] left-[0%] w-[140px] sm:w-[180px] bg-surface p-2 pb-6 sm:p-3 sm:pb-8 rounded-lg shadow-soft rotate-[7deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border pointer-events-auto">
+              <motion.div 
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+                className="absolute bottom-[4%] left-[0%] w-[140px] sm:w-[180px] bg-surface p-2 pb-6 sm:p-3 sm:pb-8 rounded-lg shadow-soft rotate-[7deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border pointer-events-auto"
+              >
                 <div className="relative w-full aspect-[3/4] bg-secondary/15 rounded-md overflow-hidden mb-2">
                   <Image 
                     src="https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?w=400&auto=format&fit=crop&q=80"
@@ -242,10 +296,14 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
                   <div className="absolute top-[-8px] left-[30%] w-[38px] h-[15px] bg-accent/60 backdrop-blur-sm shadow-sm rotate-[-12deg]" />
                 </div>
                 <span className="font-heading italic text-xs text-text-secondary block text-center">Sage Co-ord</span>
-              </div>
+              </motion.div>
 
               {/* Polaroid 5 (Bottom Right) */}
-              <div className="absolute bottom-[2%] right-[5%] w-[150px] sm:w-[200px] bg-surface p-2 pb-6 sm:p-3 sm:pb-8 rounded-lg shadow-soft rotate-[-5deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border pointer-events-auto">
+              <motion.div 
+                animate={{ y: [0, -9, 0] }}
+                transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                className="absolute bottom-[2%] right-[5%] w-[150px] sm:w-[200px] bg-surface p-2 pb-6 sm:p-3 sm:pb-8 rounded-lg shadow-soft rotate-[-5deg] hover:rotate-[0deg] hover:scale-105 transition-all duration-300 border border-border pointer-events-auto"
+              >
                 <div className="relative w-full aspect-[4/5] bg-secondary/15 rounded-md overflow-hidden mb-2">
                   <Image 
                     src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&auto=format&fit=crop&q=80"
@@ -257,7 +315,7 @@ export default function HomeClient({ initialProducts }: HomeClientProps) {
                   <div className="absolute top-[-8px] left-[35%] w-[42px] h-[17px] bg-secondary/65 backdrop-blur-sm shadow-sm rotate-[6deg]" />
                 </div>
                 <span className="font-heading italic text-xs text-text-secondary block text-center">Dream Satin</span>
-              </div>
+              </motion.div>
 
             </div>
 
