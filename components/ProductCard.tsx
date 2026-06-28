@@ -41,7 +41,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
   return (
     <div
-      className="group relative flex flex-col bg-surface rounded-card border border-border shadow-soft overflow-hidden hover:translate-y-[-4px] transition-all duration-300 animate-fade-in font-body"
+      className="group relative flex flex-col glass-container rounded-card shadow-soft overflow-hidden hover:translate-y-[-4px] transition-all duration-300 animate-fade-in font-body"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => {
         setHovered(false);

@@ -345,13 +345,13 @@ function ShopContent() {
             {/* Mobile filter toggle */}
             <button
               onClick={() => setMobileFiltersOpen(true)}
-              className="md:hidden flex items-center gap-1.5 px-4 py-2 border border-border bg-surface rounded-btn text-xs font-semibold uppercase tracking-wider text-text-primary hover:bg-background"
+              className="md:hidden flex items-center gap-1.5 px-4 py-2 glass-container rounded-btn text-xs font-semibold uppercase tracking-wider text-text-primary hover:bg-background"
             >
               <SlidersHorizontal className="w-4 h-4" /> Filters
             </button>
 
             {/* Sort by Dropdown */}
-            <div className="flex items-center gap-2 border border-border bg-surface rounded-btn px-3 py-2 text-xs font-semibold uppercase tracking-wider relative shadow-soft">
+            <div className="flex items-center gap-2 glass-container rounded-btn px-3 py-2 text-xs font-semibold uppercase tracking-wider relative shadow-soft">
               <span className="text-text-secondary">Sort:</span>
               <select
                 value={sortBy}
@@ -521,7 +521,7 @@ function ShopContent() {
                 {activeChips.map((chip, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-1 bg-surface border border-border rounded-full px-3 py-1 text-xs text-text-primary shadow-soft"
+                    className="flex items-center gap-1 glass-container rounded-full px-3 py-1 text-xs text-text-primary shadow-soft"
                   >
                     <span className="capitalize">{chip.label}</span>
                     <button
@@ -563,7 +563,7 @@ function ShopContent() {
             ) : (
               // Empty search state
               !loading && (
-                <div className="text-center py-20 px-4 bg-surface rounded-card border border-border shadow-soft flex flex-col items-center justify-center">
+                <div className="text-center py-20 px-4 glass-container rounded-card shadow-soft flex flex-col items-center justify-center">
                   <div className="w-24 h-24 rounded-full bg-secondary/25 border border-secondary flex items-center justify-center mb-6">
                     <Filter className="w-10 h-10 text-primary-dark/65" />
                   </div>
@@ -606,7 +606,7 @@ function ShopContent() {
       {/* Mobile Drawer Slide-in filters overlay */}
       {mobileFiltersOpen && (
         <div className="fixed inset-0 z-50 md:hidden bg-text-primary/40 backdrop-blur-sm animate-fade-in flex justify-end">
-          <div className="w-80 bg-background h-full p-6 shadow-soft overflow-y-auto flex flex-col justify-between">
+          <div className="w-80 glass-container border-y-0 border-r-0 rounded-none h-full p-6 shadow-soft overflow-y-auto flex flex-col justify-between">
             <div className="flex flex-col gap-6">
               
               <div className="flex items-center justify-between border-b border-border pb-4">

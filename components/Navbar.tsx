@@ -15,14 +15,16 @@ import {
   LogOut, 
   ChevronDown,
   LayoutDashboard,
-  ShoppingBag as AdminOrdersIcon
+  ShoppingBag as AdminOrdersIcon,
+  Sun,
+  Moon
 } from "lucide-react";
 import Image from "next/image";
 
 import { Suspense } from "react";
 
 function NavbarContent() {
-  const { user, role, cartCount, wishlistCount, logout, isPageLoading } = useApp();
+  const { user, role, cartCount, wishlistCount, logout, isPageLoading, theme, toggleTheme } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,8 +72,8 @@ function NavbarContent() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-background/85 backdrop-blur-md border-b border-border shadow-soft py-3"
-            : "bg-transparent py-5"
+            ? "glass-container border-t-0 border-x-0 rounded-none shadow-soft py-3"
+            : "bg-transparent py-5 border-none"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
@@ -95,7 +97,7 @@ function NavbarContent() {
           {/* Search Bar - Center (Desktop) */}
           <form 
             onSubmit={handleSearchSubmit} 
-            className="hidden md:flex items-center flex-1 max-w-md relative bg-surface border border-border rounded-input px-3 py-1.5 focus-within:border-primary transition-colors shadow-soft"
+            className="hidden md:flex items-center flex-1 max-w-md relative glass-container rounded-input px-3 py-1.5 focus-within:border-primary transition-colors shadow-soft"
           >
             <input
               type="text"
@@ -157,6 +159,15 @@ function NavbarContent() {
                 </span>
               )}
             </Link>
+ 
+            {/* Theme Toggle Switch */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-text-primary hover:text-primary-dark transition-all duration-300 hover:rotate-12 hover:scale-110"
+              title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+            >
+              {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5 text-yellow-400 fill-yellow-400" />}
+            </button>
 
             {/* Profile / Dropdown */}
             {user ? (
@@ -260,12 +271,21 @@ function NavbarContent() {
                 <span className="font-heading italic text-xl font-bold tracking-wide">
                   Kushvi Closet
                 </span>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-1 hover:bg-border/30 rounded-full transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={toggleTheme}
+                    className="p-2 text-text-primary hover:text-primary-dark transition-all duration-300"
+                    title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+                  >
+                    {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5 text-yellow-400 fill-yellow-400" />}
+                  </button>
+                  <button
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-1 hover:bg-border/30 rounded-full transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
 
               {/* Mobile Search */}

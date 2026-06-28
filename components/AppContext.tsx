@@ -23,6 +23,8 @@ interface AppContextType {
   logout: () => Promise<void>;
   isPageLoading: boolean;
   setIsPageLoading: (val: boolean) => void;
+  theme: "light" | "dark";
+  toggleTheme: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -36,8 +38,39 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [useLocalCartFallback, setUseLocalCartFallback] = useState(false);
   const [useLocalWishlistFallback, setUseLocalWishlistFallback] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const router = useRouter();
   const pathname = usePathname();
+
+  // Load theme from localStorage or system preference on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("kushvi_theme");
+    if (savedTheme === "dark" || savedTheme === "light") {
+      setTheme(savedTheme);
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (prefersDark) {
+        setTheme("dark");
+        document.documentElement.classList.add("dark");
+      }
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "light" ? "dark" : "light";
+    setTheme(nextTheme);
+    localStorage.setItem("kushvi_theme", nextTheme);
+    if (nextTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   // Route change progress bar trigger
   useEffect(() => {
@@ -575,6 +608,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         logout,
         isPageLoading,
         setIsPageLoading,
+        theme,
+        toggleTheme,
       }}
     >
       {children}
